@@ -1,0 +1,10 @@
+src/config/
+
+# Dependencies
+node_modules/
+npm-debug.log*
+
+
+
+# IDE
+.vscode/
