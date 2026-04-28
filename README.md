@@ -42,12 +42,15 @@ Bolna → Webhook → notificationService → slackService → Slack Channel
    npm install
    ```
 
-2. **Configure Slack webhook:**
-   Edit `src/config/config.js` and replace with your Slack webhook URL:
-   ```javascript
-   export default {
-     slack_webhook_url: "https://hooks.slack.com/services/YOUR/WEBHOOK/URL",
-   };
+2. **Configure environment variables:**
+   Copy `.env.example` to `.env` and add your Slack webhook URL:
+   ```bash
+   cp .env.example .env
+   ```
+   
+   Edit `.env`:
+   ```
+   SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL
    ```
 
 3. **Start the server:**
