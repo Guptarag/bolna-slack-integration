@@ -1,11 +1,11 @@
 import express from "express"
 import notificationService from "../services/notification.service.js"
-
 const router = express.Router();
 
 router.post("/bolna", async (req, res) => {
   try {
     const payload = req.body;
+    console.log(payload)
 
 
     await notificationService.handleBolnaEvent(payload);

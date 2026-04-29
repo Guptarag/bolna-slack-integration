@@ -43,14 +43,11 @@ Bolna → Webhook → notificationService → slackService → Slack Channel
    ```
 
 2. **Configure environment variables:**
-   Copy `.env.example` to `.env` and add your Slack webhook URL:
-   ```bash
-   cp .env.example .env
+   Create a `.env` file with the following variables:
    ```
-   
-   Edit `.env`:
-   ```
+   PORT=3000
    SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL
+   API_KEY=your-api-key-here
    ```
 
 3. **Start the server:**
@@ -60,6 +57,8 @@ Bolna → Webhook → notificationService → slackService → Slack Channel
 
 4. **Configure Bolna webhook:**
    Point your Bolna webhook URL to: `http://YOUR_SERVER/webhook/bolna`
+   
+   Include the API key in the request header: `X-API-Key: your-api-key-here`
 
 ---
 
