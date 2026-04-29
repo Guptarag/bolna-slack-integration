@@ -1,6 +1,6 @@
 import axios from "axios";
 import config from '../config/config.js';
-import { apiKeyAuth  } from "../middleware/apikey.middleware.js";
+import { apiKeyAuth  } from "../middleware/apiKey.middleware.js";
 
 async function sendCallSummary(data) {
   const message = formatMessage(data);

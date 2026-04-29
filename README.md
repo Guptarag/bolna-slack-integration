@@ -11,10 +11,13 @@ This server receives webhook events from Bolna's telephony system and forwards c
 ```
 bolna-slack-integration/
 ├── package.json              # Dependencies and scripts
+├── Dockerfile                # Docker container configuration
 ├── src/
 │   ├── server.js             # Express server entry point
 │   ├── config/
-│   │   └── config.js         # Configuration (Slack webhook URL)
+│   │   └── config.js         # Configuration (environment variables)
+│   ├── middleware/
+│   │   └── apiKey.middleware.js  # API key authentication
 │   ├── routes/
 │   │   └── bolna.route.js    # Webhook endpoint handler
 │   ├── services/
@@ -37,6 +40,24 @@ Bolna → Webhook → notificationService → slackService → Slack Channel
 
 ## Setup
 
+### Option 1: Using Docker (Recommended)
+
+1. **Build the Docker image:**
+   ```bash
+   docker build -t bolna-app:latest .
+   ```
+
+2. **Run the container:**
+   ```bash
+   docker run -p 5000:5000 \
+     -e PORT=5000 \
+     -e API_KEY=your-api-key-here \
+     -e SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL \
+     bolna-app:latest
+   ```
+
+### Option 2: Local Development
+
 1. **Install dependencies:**
    ```bash
    npm install
@@ -45,7 +66,7 @@ Bolna → Webhook → notificationService → slackService → Slack Channel
 2. **Configure environment variables:**
    Create a `.env` file with the following variables:
    ```
-   PORT=3000
+   PORT=5000
    SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL
    API_KEY=your-api-key-here
    ```
@@ -55,10 +76,11 @@ Bolna → Webhook → notificationService → slackService → Slack Channel
    node src/server.js
    ```
 
-4. **Configure Bolna webhook:**
-   Point your Bolna webhook URL to: `http://YOUR_SERVER/webhook/bolna`
-   
-   Include the API key in the request header: `X-API-Key: your-api-key-here`
+### Configure Bolna Webhook
+
+Point your Bolna webhook URL to: `http://YOUR_SERVER/webhook/bolna`
+
+Include the API key in the request header: `X-API-Key: your-api-key-here`
 
 ---
 
@@ -374,6 +396,7 @@ Test the webhook locally:
 ```bash
 curl -X POST http://localhost:5000/webhook/bolna \
   -H "Content-Type: application/json" \
+  -H "X-API-Key: your-api-key-here" \
   -d '{
     "id": "call_12345",
     "agent_id": "agent_001",
@@ -387,21 +410,26 @@ curl -X POST http://localhost:5000/webhook/bolna \
 
 ## Deployment
 
+### Using Docker (Recommended)
+
+The project includes a Dockerfile for containerized deployment:
+
+```bash
+# Build the image
+docker build -t bolna-app:latest .
+
+# Run the container
+docker run -p 5000:5000 \
+  -e PORT=5000 \
+  -e API_KEY=your-api-key-here \
+  -e SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL \
+  bolna-app:latest
+```
+
 ### Using PM2 (Production)
 ```bash
 npm install -g pm2
 pm2 start src/server.js --name bolna-slack
-```
-
-### Using Docker
-```dockerfile
-FROM node:20-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm install --production
-COPY src/ ./src/
-EXPOSE 5000
-CMD ["node", "src/server.js"]
 ```
 
 ---
